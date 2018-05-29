@@ -87,7 +87,7 @@ or ``MIDDLEWARE`` if using Django 1.10 or higher:
                 # TODO: This relies on request.user.date_joined which might not
                 # be available!!!
                 request.session[self.last] = DateSerializer.serialize(request.user.date_joined)
-        if DateSerializer.deserialize(request.session[self.last]) < self.expiry_datetime:
+        if DateSerializer.deserialize(request.session[self.last]) < self.expiry_datetime.replace(tzinfo=None):
             request.session[self.required] = True
             if not PasswordChangeRequired.objects.filter(user=request.user).count():
                 PasswordChangeRequired.objects.create(user=request.user)
@@ -107,7 +107,7 @@ or ``MIDDLEWARE`` if using Django 1.10 or higher:
             if PasswordChangeRequired.objects.filter(user=request.user).count():
                 request.session[self.required] = True
                 return
-            if DateSerializer.deserialize(request.session[self.checked]) < self.expiry_datetime:
+            if DateSerializer.deserialize(request.session[self.checked]) < self.expiry_datetime.replace(tzinfo=None):
                 try:
                     del request.session[self.last]
                     del request.session[self.checked]
