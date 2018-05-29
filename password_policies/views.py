@@ -22,6 +22,8 @@ from password_policies.forms import PasswordPoliciesForm
 from password_policies.forms import PasswordPoliciesChangeForm
 from password_policies.forms import PasswordResetForm
 
+from utils import DateSerializer
+
 
 class LoggedOutMixin(View):
     """
@@ -97,7 +99,7 @@ if set, otherwise the URL to the :class:`PasswordChangeDoneView`.
         checked = '_password_policies_last_checked'
         last = '_password_policies_last_changed'
         required = '_password_policies_change_required'
-        now = timezone.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+        now = DateSerializer.serialize(timezone.now())
         self.request.session[checked] = now
         self.request.session[last] = now
         self.request.session[required] = False
