@@ -1,10 +1,11 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 
 from password_policies.conf import settings
 from password_policies.models import PasswordHistory
+import dateutil.parser
 
 
 class PasswordCheck(object):
@@ -46,3 +47,16 @@ exists the verification is successful.
         "Returns the date and time when the user's password has expired."
         seconds = settings.PASSWORD_DURATION_SECONDS
         return timezone.now() - timedelta(seconds=seconds)
+
+
+class DateSerializer(object):
+
+    DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
+
+    @staticmethod
+    def serialize(dt_object):
+        return dt_object.isoformat()
+
+    @staticmethod
+    def deserialize(s):
+        return dateutil.parser.parse(s)
