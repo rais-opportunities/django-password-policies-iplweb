@@ -134,7 +134,7 @@ or ``MIDDLEWARE`` if using Django 1.10 or higher:
             paths.append(r'^%s?' % static_url)
         if settings.PASSWORD_CHANGE_MIDDLEWARE_ALLOW_LOGOUT:
             try:
-                logout_url = reverse('logout')
+                logout_url = reverse('home:logout')
             except NoReverseMatch:
                 pass
             else:
