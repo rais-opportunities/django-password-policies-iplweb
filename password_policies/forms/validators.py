@@ -425,6 +425,46 @@ Returns this validator's error message.
 """
         return settings.PASSWORD_MIN_LETTERS
 
+class UppercaseLetterCountValidator(BaseCountValidator):
+    """
+Counts the occurrences of letters and raises a
+:class:`~django.core.exceptions.ValidationError` if the count
+is less than :func:`~LetterCountValidator.get_min_count`.
+"""
+    categories = ['Lu']
+    """
+The unicode data letter categories:
+
+====  ===========
+Code  Description
+====  ===========
+LC    Letter, Cased
+Ll    Letter, Lowercase
+Lu    Letter, Uppercase
+Lt    Letter, Titlecase
+Lo    Letter, Other
+Nl    Number, Letter
+====  ===========
+
+"""
+    #: The validator's error code.
+    code = u"invalid_letter_count"
+
+    def get_error_message(self):
+        """
+Returns this validator's error message.
+"""
+        msg = ungettext("The new password must contain %d or more uppercase letter.",
+                        "The new password must contain %d or more uppercase letters.",
+                        self.get_min_count()) % self.get_min_count()
+        return msg
+
+    def get_min_count(self):
+        """
+:returns: :py:attr:`password_policies.conf.Settings.PASSWORD_MIN_LETTERS`
+"""
+        return settings.PASSWORD_MIN_UPPERCASE_LETTERS
+
 
 class NotEmailValidator(object):
     """
@@ -569,3 +609,4 @@ validate_letter_count = LetterCountValidator()
 validate_not_email = NotEmailValidator()
 validate_number_count = NumberCountValidator()
 validate_symbol_count = SymbolCountValidator()
+validate_uppercase_letter_count = UppercaseLetterCountValidator()

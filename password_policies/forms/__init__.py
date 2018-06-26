@@ -45,10 +45,10 @@ Has the following fields and methods:
         'password_used': _("The new password was used before. "
                            "Please enter another one."),
     }
-    new_password1 = PasswordPoliciesField(label=_("New password"),
+    new_password1 = PasswordPoliciesField(label=_("Please, enter your new password"),
                                           max_length=settings.PASSWORD_MAX_LENGTH,
                                           min_length=settings.PASSWORD_MIN_LENGTH)
-    new_password2 = forms.CharField(label=_("New password confirmation"),
+    new_password2 = forms.CharField(label=_("Please, re-enter your new password"),
                                     widget=forms.PasswordInput)
 
     def __init__(self, user, *args, **kwargs):
@@ -120,7 +120,7 @@ Has the following fields and methods:
         'password_similar': _("The old and the new password are too similar."),
         'password_identical': _("The old and the new password are the same."),
     })
-    old_password = forms.CharField(label=_("Old password"),
+    old_password = forms.CharField(label=_("Please, enter your old password"),
                                    widget=forms.PasswordInput)
 
     def clean_old_password(self):

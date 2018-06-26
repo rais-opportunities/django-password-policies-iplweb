@@ -34,7 +34,7 @@ A view mixin which verifies that the user has not authenticated.
 """
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated() and request.path != '/password/reset/':
+        if request.user.is_authenticated() and '/password/reset/' not in request.path:
             template_name = settings.TEMPLATE_403_PAGE
             return permission_denied(request, template_name=template_name)
         return super(LoggedOutMixin, self).dispatch(request, *args, **kwargs)
