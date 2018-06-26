@@ -23,7 +23,7 @@ from password_policies.forms import PasswordPoliciesChangeForm
 from password_policies.forms import PasswordResetForm
 
 from utils import DateSerializer
-
+from django.contrib.auth import authenticate, login
 
 class LoggedOutMixin(View):
     """
@@ -74,6 +74,7 @@ A view that allows logged in users to change their password.
     @method_decorator(csrf_protect)
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+
         redirect_field_name = kwargs.pop('redirect_field_name', None)
         if redirect_field_name:
             self.redirect_field_name = redirect_field_name
@@ -81,6 +82,9 @@ A view that allows logged in users to change their password.
 
     def form_valid(self, form):
         form.save()
+        new_user = authenticate(username=form.user.username,
+                                password=form.cleaned_data['new_password1'])
+        login(self.request, new_user)
         return super(PasswordChangeFormView, self).form_valid(form)
 
     def get_form(self, form_class=None):
@@ -151,6 +155,7 @@ class PasswordResetConfirmView(LoggedOutMixin, FormView):
     # @method_decorator(sensitive_post_parameters)
     @method_decorator(never_cache)
     def dispatch(self, request, *args, **kwargs):
+        self.request = request
         self.uidb64 = args[0]
         self.timestamp = args[1]
         self.signature = args[2]
@@ -177,6 +182,9 @@ class PasswordResetConfirmView(LoggedOutMixin, FormView):
 
     def form_valid(self, form):
         form.save()
+        new_user = authenticate(username=form.user.username,
+                                password=form.cleaned_data['new_password1'])
+        login(self.request, new_user)
         return super(PasswordResetConfirmView, self).form_valid(form)
 
     def get(self, request, *args, **kwargs):
