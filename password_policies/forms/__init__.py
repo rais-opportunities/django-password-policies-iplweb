@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import loader
+from django.contrib.sites.shortcuts import get_current_site
 
 try:
     # SortedDict is deprecated as of Django 1.7 and will be removed in Django 1.9.
